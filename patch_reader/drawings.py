@@ -12,8 +12,8 @@ from openpyxl.xml.constants import (PACKAGE_WORKSHEET_RELS,
                                     DRAWING_NS,
                                     SHEET_DRAWING_NS)
 from openpyxl.xml.functions import fromstring
-from openpyxl.drawing import Image
-from openpyxl.cell import get_column_letter
+from openpyxl.drawing.image import Image
+from openpyxl.utils import get_column_letter
 
 
 IMAGE_NS = REL_NS + '/image'
@@ -79,7 +79,9 @@ def read_drawings(ws, drawings_path, archive, valid_files):
                     if rid is not None:
                         image_file = read_image_file(rels_root, rid, valid_files)
                         if image_file:
-                            img = Image(BytesIO(archive.read(image_file)))
+                            readfile = archive.read(image_file)
+                            bytes = BytesIO(readfile)
+                            img = Image(bytes)
                             img.drawing.name = name
                             img.anchor(cell, anchortype='oneCell')
 
